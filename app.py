@@ -221,5 +221,7 @@ def metrics():
         ml_metrics = pickle.load(f)
     return render_template('metrics.html', metrics=ml_metrics)
 
+application = app
+
 if __name__ == '__main__':
     app.run(debug=True)
