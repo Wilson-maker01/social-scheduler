@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-3">
+    <div class="col-md-8">
+        <div class="card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h2 class="mb-1">{{ post.title }}</h2>
+                    <span class="platform-badge platform-{{ post.platform }}">
+                        {{ post.platform }}
+                    </span>
+                </div>
+                <span class="status-{{ post.status }}" style="font-weight: 600;">
+                    {{ post.status | capitalize }}
+                </span>
+            </div>
+            <hr>
+            <p style="color: var(--text-primary); font-size: 1rem;">
+                {{ post.content }}
+            </p>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <p><strong>Post Type:</strong>
+                        <span style="color: var(--text-primary); text-transform: capitalize;">
+                            {{ post.post_type }}
+                        </span>
+                    </p>
+                    <p><strong>Scheduled:</strong>
+                        <span style="color: var(--text-primary);">
+                            {{ post.scheduled_time.strftime('%Y-%m-%d %H:%M') }}
+                        </span>
+                    </p>
+                    <p><strong>Hashtags:</strong>
+                        <span style="color: var(--text-primary);">{{ post.hashtags }}</span>
+                    </p>
+                    <p><strong>Mentions:</strong>
+                        <span style="color: var(--text-primary);">{{ post.mentions }}</span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Has Image:</strong>
+                        <span style="color: var(--text-primary);">
+                            {{ 'Yes' if post.has_image else 'No' }}
+                        </span>
+                    </p>
+                    <p><strong>Has Video:</strong>
+                        <span style="color: var(--text-primary);">
+                            {{ 'Yes' if post.has_video else 'No' }}
+                        </span>
+                    </p>
+                    <p><strong>Word Count:</strong>
+                        <span style="color: var(--text-primary);">{{ post.word_count }}</span>
+                    </p>
+                    <p><strong>Created:</strong>
+                        <span style="color: var(--text-primary);">
+                            {{ post.created_at.strftime('%Y-%m-%d') }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Predicted Engagement -->
+        <div class="card p-4 mb-4">
+            <h5 class="mb-3">Predicted Engagement</h5>
+            <hr>
+            <div class="row text-center">
+                <div class="col-6 col-md-3 mb-3">
+                    <div class="stat-number" style="color: var(--accent);">
+                        {{ post.predicted_likes | int }}
+                    </div>
+                    <div class="stat-label">Likes</div>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <div class="stat-number" style="color: var(--accent-2);">
+                        {{ post.predicted_shares | int }}
+                    </div>
+                    <div class="stat-label">Shares</div>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <div class="stat-number" style="color: var(--accent-3);">
+                        {{ post.predicted_comments | int }}
+                    </div>
+                    <div class="stat-label">Comments</div>
+                </div>
+                <div class="col-6 col-md-3 mb-3">
+                    <div class="stat-number" style="color: var(--accent-4);">
+                        {{ post.predicted_engagement | int }}
+                    </div>
+                    <div class="stat-label">Total</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mark as Published -->
+        {% if post.status == 'scheduled' %}
+        <div class="card p-4 mb-4">
+            <h5 class="mb-3">Mark as Published</h5>
+            <hr>
+            <p style="font-size: 0.9rem;">
+                Enter the actual engagement numbers after publishing.
+            </p>
+            <form method="POST" action="/post/{{ post.id }}/publish">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Actual Likes</label>
+                        <input type="number" name="actual_likes"
+                               class="form-control" placeholder="0" min="0">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Actual Shares</label>
+                        <input type="number" name="actual_shares"
+                               class="form-control" placeholder="0" min="0">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Actual Comments</label>
+                        <input type="number" name="actual_comments"
+                               class="form-control" placeholder="0" min="0">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success mt-3">
+                    Mark as Published
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Actions -->
+        <div class="d-flex gap-2">
+            <a href="/" class="btn btn-primary">Back to Dashboard</a>
+            <a href="/post/{{ post.id }}/delete"
+               class="btn btn-danger"
+               onclick="return confirm('Delete this post?')">
+                Delete Post
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

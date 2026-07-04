@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Social Scheduler</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="dark"] {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: rgba(26, 26, 46, 0.95);
+            --text-primary: #eaeaea;
+            --text-secondary: #a0a0c0;
+            --accent: #6c63ff;
+            --accent-2: #ff6584;
+            --accent-3: #43e97b;
+            --accent-4: #fda085;
+            --border: rgba(108, 99, 255, 0.2);
+            --navbar-bg: rgba(15, 15, 26, 0.98);
+            --input-bg: rgba(0, 0, 20, 0.6);
+            --shadow: rgba(108, 99, 255, 0.1);
+        }
+        :root[data-theme="light"] {
+            --bg-primary: #f0f4ff;
+            --bg-secondary: #e8ecff;
+            --bg-card: rgba(255, 255, 255, 0.98);
+            --text-primary: #1a1a2e;
+            --text-secondary: #5a5a7a;
+            --accent: #6c63ff;
+            --accent-2: #ff6584;
+            --accent-3: #00c853;
+            --accent-4: #fda085;
+            --border: rgba(108, 99, 255, 0.15);
+            --navbar-bg: rgba(255, 255, 255, 0.98);
+            --input-bg: rgba(240, 244, 255, 0.9);
+            --shadow: rgba(108, 99, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse at 0% 0%, rgba(108, 99, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 100% 0%, rgba(255, 101, 132, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 100%, rgba(67, 233, 123, 0.1) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Colorful Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #6c63ff, #9c63ff) !important;
+            border-bottom: none !important;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 12px 0;
+        }
+
+        .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            padding: 6px 14px !important;
+            border-radius: 20px;
+            margin: 0 2px;
+        }
+
+        .nav-link:hover {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px var(--shadow);
+            animation: fadeInUp 0.4s ease;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 30px var(--shadow);
+            border-color: rgba(108, 99, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Colorful Stat Cards */
+        .stat-card-purple {
+            background: linear-gradient(135deg, #6c63ff, #9c63ff) !important;
+            border: none !important;
+            box-shadow: 0 8px 25px rgba(108, 99, 255, 0.3) !important;
+        }
+        .stat-card-pink {
+            background: linear-gradient(135deg, #ff6584, #ff4757) !important;
+            border: none !important;
+            box-shadow: 0 8px 25px rgba(255, 101, 132, 0.3) !important;
+        }
+        .stat-card-green {
+            background: linear-gradient(135deg, #43e97b, #38f9d7) !important;
+            border: none !important;
+            box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3) !important;
+        }
+        .stat-card-orange {
+            background: linear-gradient(135deg, #fda085, #f6d365) !important;
+            border: none !important;
+            box-shadow: 0 8px 25px rgba(253, 160, 133, 0.3) !important;
+        }
+        .stat-card-purple .stat-number,
+        .stat-card-pink .stat-number,
+        .stat-card-green .stat-number,
+        .stat-card-orange .stat-number { color: #ffffff !important; }
+        .stat-card-purple .stat-label,
+        .stat-card-pink .stat-label,
+        .stat-card-green .stat-label,
+        .stat-card-orange .stat-label { color: rgba(255,255,255,0.85) !important; }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(135deg, #6c63ff, #9c63ff);
+            border: none;
+            color: #ffffff;
+            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #9c63ff, #6c63ff);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6584, #ff4757);
+            border: none;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(255, 101, 132, 0.3);
+        }
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 101, 132, 0.4);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 233, 123, 0.4);
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #fda085, #f6d365);
+            border: none;
+            color: #1a1a2e;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(253, 160, 133, 0.3);
+        }
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(253, 160, 133, 0.4);
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            background: var(--input-bg);
+            border-color: var(--accent);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+        }
+        .form-control::placeholder { color: var(--text-secondary); opacity: 0.7; }
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+        .form-check-input:checked {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Typography */
+        h1, h2 {
+            color: var(--text-primary) !important;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        h3, h4, h5 {
+            color: var(--text-primary) !important;
+            font-weight: 600;
+        }
+        p { color: var(--text-secondary); line-height: 1.6; }
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s ease; }
+        a:hover { color: #5a52d5; }
+        hr { border-color: var(--border) !important; margin: 16px 0; }
+
+        /* Tables */
+        .table td, .table th {
+            border-color: var(--border);
+            color: var(--text-secondary);
+            padding: 12px 16px;
+            font-size: 0.88rem;
+            vertical-align: middle;
+        }
+        .table thead th {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .table tbody tr:hover { background: rgba(108, 99, 255, 0.04); }
+
+        /* Badges */
+        .badge {
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 12px;
+            font-size: 0.9rem;
+            border: none;
+        }
+        .alert-success {
+            background: rgba(67, 233, 123, 0.1);
+            color: #1a6b3a;
+            border-left: 3px solid #43e97b !important;
+        }
+        .alert-danger {
+            background: rgba(255, 101, 132, 0.1);
+            color: #8b1a2a;
+            border-left: 3px solid #ff6584 !important;
+        }
+
+        /* Stat Cards */
+        .stat-card { text-align: center; padding: 20px 16px; }
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* Platform Badges */
+        .platform-badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            display: inline-block;
+        }
+        .platform-instagram { background: rgba(255, 101, 132, 0.15); color: #ff6584; }
+        .platform-twitter { background: rgba(108, 99, 255, 0.15); color: #6c63ff; }
+        .platform-facebook { background: rgba(67, 233, 123, 0.15); color: #00c853; }
+        .platform-linkedin { background: rgba(56, 249, 215, 0.15); color: #38f9d7; }
+        .platform-tiktok { background: rgba(253, 160, 133, 0.15); color: #fda085; }
+
+        /* Status */
+        .status-scheduled { color: #fda085; font-weight: 600; }
+        .status-published { color: #43e97b; font-weight: 600; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .navbar-brand { font-size: 1.1rem; }
+            .card { border-radius: 12px; }
+            .stat-number { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem !important; }
+            .btn { font-size: 0.85rem; padding: 9px 18px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">SocialScheduler</a>
+            <div class="d-flex align-items-center gap-2 ms-auto">
+                {% if current_user.is_authenticated %}
+                    <a class="nav-link d-none d-md-block" href="/">Dashboard</a>
+                    <a class="nav-link d-none d-md-block" href="/schedule">Schedule Post</a>
+                    <a class="nav-link d-none d-md-block" href="/analytics">Analytics</a>
+                    <a class="nav-link d-none d-md-block" href="/metrics">ML Metrics</a>
+                    <a class="nav-link d-none d-md-block" href="/logout">Logout</a>
+                {% else %}
+                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link" href="/register">Register</a>
+                {% endif %}
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText" class="d-none d-md-inline">Dark</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3 pb-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show mt-2">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+            document.getElementById('themeText').textContent = next === 'dark' ? 'Light' : 'Dark';
+        }
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.getElementById('themeIcon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        document.getElementById('themeText').textContent = savedTheme === 'dark' ? 'Light' : 'Dark';
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-3">
+    <div class="col-md-8">
+        <div class="card p-4 shadow">
+            <div class="mb-4">
+                <h2 class="mb-1">Schedule a Post</h2>
+                <p class="mb-0" style="font-size: 0.9rem;">
+                    Fill in the details and our ML model will predict the engagement
+                </p>
+            </div>
+
+            <form method="POST" action="/schedule">
+                <!-- Title -->
+                <div class="mb-3">
+                    <label class="form-label">Post Title</label>
+                    <input type="text" name="title" class="form-control"
+                           placeholder="Enter a title for your post" required>
+                </div>
+
+                <!-- Content -->
+                <div class="mb-3">
+                    <label class="form-label">Content</label>
+                    <textarea name="content" class="form-control" rows="4"
+                              placeholder="Write your post content here..." required></textarea>
+                </div>
+
+                <div class="row g-3">
+                    <!-- Platform -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Platform</label>
+                        <select name="platform" class="form-select" required>
+                            <option value="">Select Platform</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="twitter">Twitter</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="linkedin">LinkedIn</option>
+                            <option value="tiktok">TikTok</option>
+                        </select>
+                    </div>
+
+                    <!-- Post Type -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Post Type</label>
+                        <select name="post_type" class="form-select" required>
+                            <option value="">Select Type</option>
+                            <option value="image">Image</option>
+                            <option value="video">Video</option>
+                            <option value="text">Text</option>
+                            <option value="story">Story</option>
+                            <option value="reel">Reel</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Scheduled Time -->
+                <div class="mb-3">
+                    <label class="form-label">Scheduled Date & Time</label>
+                    <input type="datetime-local" name="scheduled_time"
+                           class="form-control" required>
+                </div>
+
+                <div class="row g-3">
+                    <!-- Hashtags -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Number of Hashtags</label>
+                        <input type="number" name="hashtags" class="form-control"
+                               placeholder="0" min="0" max="30" value="0">
+                    </div>
+
+                    <!-- Mentions -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Number of Mentions</label>
+                        <input type="number" name="mentions" class="form-control"
+                               placeholder="0" min="0" max="10" value="0">
+                    </div>
+                </div>
+
+                <!-- Followers -->
+                <div class="mb-3">
+                <label class="form-label">Your Follower Count</label>
+                <input type="number" name="followers" class="form-control"
+                placeholder="e.g. 1000" min="0" value="1000">
+                <small style="color: var(--text-secondary); font-size: 0.8rem;">
+                Enter your actual follower count for more accurate predictions
+               </small>
+                </div>
+
+                <!-- Media Options -->
+                <div class="mb-4">
+                    <label class="form-label">Media Options</label>
+                    <div class="d-flex gap-4">
+                        <div class="form-check">
+                            <input type="checkbox" name="has_image"
+                                   class="form-check-input" id="hasImage">
+                            <label class="form-check-label" for="hasImage"
+                                   style="color: var(--text-primary);">
+                                Includes Image
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="has_video"
+                                   class="form-check-input" id="hasVideo">
+                            <label class="form-check-label" for="hasVideo"
+                                   style="color: var(--text-primary);">
+                                Includes Video
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ML Info Box -->
+                <div class="p-3 mb-4"
+                     style="background: rgba(108,99,255,0.05);
+                            border: 1px solid var(--border);
+                            border-left: 3px solid var(--accent);
+                            border-radius: 10px;">
+                    <p class="mb-0" style="font-size: 0.85rem; color: var(--text-secondary);">
+                        <strong style="color: var(--accent);">ML Prediction:</strong>
+                        Our Random Forest Regression model will analyze your post details
+                        and predict the expected likes, shares, comments and total engagement.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    Schedule Post & Predict Engagement
+                </button>
+            </form>
+
+            <hr>
+            <p class="text-center mb-0" style="font-size: 0.9rem;">
+                <a href="/">Back to Dashboard</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %} 

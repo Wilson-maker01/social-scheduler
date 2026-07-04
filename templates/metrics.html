@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mt-3">
+    <div class="mb-4">
+        <h2 class="mb-1">ML Model Metrics</h2>
+        <p class="mb-0" style="font-size: 0.9rem;">
+            Random Forest Regression evaluation results
+        </p>
+    </div>
+
+    <!-- R2 Score Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card stat-card">
+                <div class="stat-number" style="color: var(--accent);">
+                    {{ metrics.likes.r2 }}
+                </div>
+                <div class="stat-label">Likes R² Score</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stat-card">
+                <div class="stat-number" style="color: var(--accent-2);">
+                    {{ metrics.shares.r2 }}
+                </div>
+                <div class="stat-label">Shares R² Score</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stat-card">
+                <div class="stat-number" style="color: var(--accent-3);">
+                    {{ metrics.comments.r2 }}
+                </div>
+                <div class="stat-label">Comments R² Score</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card stat-card">
+                <div class="stat-number" style="color: var(--accent-4);">
+                    {{ metrics.engagement.r2 }}
+                </div>
+                <div class="stat-label">Engagement R² Score</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Metrics Table -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-12">
+            <div class="card p-4">
+                <h5 class="mb-3">Detailed Metrics</h5>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Target</th>
+                                <th>R² Score</th>
+                                <th>MAE</th>
+                                <th>MSE</th>
+                                <th>RMSE</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for target, m in metrics.items() %}
+                            <tr>
+                                <td style="color: var(--text-primary);
+                                           font-weight: 600;
+                                           text-transform: capitalize;">
+                                    {{ target }}
+                                </td>
+                                <td style="color: var(--accent); font-weight: 600;">
+                                    {{ m.r2 }}
+                                </td>
+                                <td style="color: var(--text-secondary);">{{ m.mae }}</td>
+                                <td style="color: var(--text-secondary);">{{ m.mse }}</td>
+                                <td style="color: var(--text-secondary);">{{ m.rmse }}</td>
+                                <td>
+                                    {% if m.r2 >= 0.9 %}
+                                        <span class="badge"
+                                              style="background: rgba(67,233,123,0.15);
+                                                     color: #43e97b;">
+                                            Excellent
+                                        </span>
+                                    {% elif m.r2 >= 0.7 %}
+                                        <span class="badge"
+                                              style="background: rgba(108,99,255,0.15);
+                                                     color: var(--accent);">
+                                            Good
+                                        </span>
+                                    {% elif m.r2 >= 0.5 %}
+                                        <span class="badge"
+                                              style="background: rgba(253,160,133,0.15);
+                                                     color: var(--accent-4);">
+                                            Fair
+                                        </span>
+                                    {% else %}
+                                        <span class="badge"
+                                              style="background: rgba(255,101,132,0.15);
+                                                     color: var(--accent-2);">
+                                            Poor
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="mb-3">Feature Importance</h5>
+                <hr>
+                <img src="/static/feature_importance.png"
+                     alt="Feature Importance"
+                     class="img-fluid" style="border-radius: 8px;">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="mb-3">Actual vs Predicted Engagement</h5>
+                <hr>
+                <img src="/static/actual_vs_predicted.png"
+                     alt="Actual vs Predicted"
+                     class="img-fluid" style="border-radius: 8px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Info -->
+    <div class="card p-4 mb-4">
+        <h5 class="mb-3">Model Information</h5>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-hover mb-0">
+                    <tbody>
+                        <tr>
+                            <td style="color: var(--text-secondary);">Algorithm</td>
+                            <td style="color: var(--text-primary); font-weight: 500;">
+                                Random Forest Regression
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--text-secondary);">Number of Trees</td>
+                            <td style="color: var(--text-primary); font-weight: 500;">
+                                100
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--text-secondary);">Training Split</td>
+                            <td style="color: var(--text-primary); font-weight: 500;">
+                                80% Train / 20% Test
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--text-secondary);">Dataset Size</td>
+                            <td style="color: var(--text-primary); font-weight: 500;">
+                                1000 Samples
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-hover mb-0">
+                    <tbody>
+                        <tr>
+                            <td style="color: var(--text-secondary);">Target Variables</td>
+                            <td style="color: var(--text-primary); font-weight: 500;">
+                                Likes, Shares, Comments, Engagement
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--text-secondary);">Features</td>
+                            <td style="color: var(--text-primary); font-weight: 500;">
+                                10 Features
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--text-secondary);">Platforms</td>
+                            <td style="color: var(--text-primary); font-weight: 500;">
+                                Instagram, Twitter, Facebook, LinkedIn, TikTok
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: var(--text-secondary);">Post Types</td>
+                            <td style="color: var(--text-primary); font-weight: 500;">
+                                Image, Video, Text, Story, Reel
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mb-4">
+        <a href="/" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %} 
